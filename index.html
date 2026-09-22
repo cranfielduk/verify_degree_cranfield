@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cranfield University UK - Verification Portal</title>
+  <style>
+    :root {
+      --primary-color: #002b49; /* Cranfield Navy Blue */
+      --secondary-color: #00a3e0;
+      --bg-color: #f4f7f6;
+      --card-bg: #ffffff;
+      --text-color: #333333;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    /* Header Styling */
+    header {
+      width: 100%;
+      background-color: var(--primary-color);
+      color: #ffffff;
+      text-align: center;
+      padding: 24px 0;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.8rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    /* Container Styling */
+    .container {
+      background-color: var(--card-bg);
+      padding: 30px 40px;
+      margin-top: 40px;
+      margin-bottom: 40px;
+      border-radius: 8px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.08);
+      width: 100%;
+      max-width: 480px;
+      box-sizing: border-box;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--primary-color);
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 1rem;
+      box-sizing: border-box;
+      transition: border-color 0.3s ease;
+    }
+
+    input[type="text"]:focus {
+      outline: none;
+      border-color: var(--secondary-color);
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 4px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-verify {
+      background-color: var(--primary-color);
+      color: white;
+    }
+
+    .btn-verify:hover {
+      background-color: #001a2e;
+    }
+
+    .btn-refresh {
+      background-color: #6c757d;
+      color: white;
+      margin-top: 15px;
+    }
+
+    .btn-refresh:hover {
+      background-color: #5a6268;
+    }
+
+    /* Result Box Styling */
+    .result-group {
+      margin-top: 25px;
+    }
+
+    .result-box {
+      min-height: 50px;
+      padding: 15px;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      background-color: #fafafa;
+      font-size: 1rem;
+      line-height: 1.5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    /* Status Styles */
+    .success {
+      background-color: #e8f8f5;
+      border-color: #2ecc71;
+      color: #27ae60;
+      font-weight: 600;
+    }
+
+    .error {
+      background-color: #fde8e8;
+      border-color: #e74c3c;
+      color: #c0392b;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <h1>Cranfield University UK</h1>
+  </header>
+
+  <!-- Main Input Form -->
+  <div class="container">
+    <div class="form-group">
+      <label for="refInput">Reference (Ref)</label>
+      <input type="text" id="refInput" />
+    </div>
+
+    <div class="form-group">
+      <label for="nameInput">Name</label>
+      <input type="text" id="nameInput" />
+    </div>
+
+    <button class="btn btn-verify" onclick="verifyRecord()">Verify</button>
+
+    <!-- Result Box -->
+    <div class="result-group">
+      <label>Result</label>
+      <div id="resultBox" class="result-box">
+        Enter details above and click Verify.
+      </div>
+    </div>
+
+    <!-- Refresh Button -->
+    <button class="btn btn-refresh" onclick="refreshForm()">Refresh</button>
+  </div>
+
+  <script>
+    function verifyRecord() {
+      // Get values from input boxes
+      const rawRef = document.getElementById('refInput').value;
+      const rawName = document.getElementById('nameInput').value;
+      const resultBox = document.getElementById('resultBox');
+
+      // Normalize inputs (remove spaces and ignore case)
+      const cleanRef = rawRef.replace(/\s+/g, '').toUpperCase();
+      const cleanName = rawName.trim().toLowerCase();
+
+      // Target criteria
+      const targetRef = "CU/DSC/2026/AE-088".replace(/\s+/g, '').toUpperCase();
+      const targetName = "prem kumar";
+
+      // Reset CSS classes
+      resultBox.className = 'result-box';
+
+      // Validation check
+      if (cleanRef === targetRef && cleanName === targetName) {
+        resultBox.classList.add('success');
+        resultBox.innerHTML = "verified Dr Prem Kumar awarded Doctor of Science confered on 25 june 2026";
+      } else if (rawRef.trim() === "" || rawName.trim() === "") {
+        resultBox.classList.add('error');
+        resultBox.innerHTML = "Please enter both Ref and Name.";
+      } else {
+        resultBox.classList.add('error');
+        resultBox.innerHTML = "No record found matching the provided Reference and Name.";
+      }
+    }
+
+    function refreshForm() {
+      // Clear input fields
+      document.getElementById('refInput').value = '';
+      document.getElementById('nameInput').value = '';
+
+      // Reset result box
+      const resultBox = document.getElementById('resultBox');
+      resultBox.className = 'result-box';
+      resultBox.innerHTML = 'Enter details above and click Verify.';
+
+      // Focus back to first input box
+      document.getElementById('refInput').focus();
+    }
+  </script>
+
+</body>
+</html>
